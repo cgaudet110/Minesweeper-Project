@@ -1,4 +1,14 @@
-# How to Play Minesweeper in OCaml
+# About
+Our project is a minesweeper game inspired by Google's "Minesweeper".
+The object of the game is to uncover all non-mine cells in the grid without
+setting off any hidden mines.
+
+Click on cells in the grid to reveal if there is a hidden mine.
+Cells clicked on will either end the game if there is a mine, 
+say how many mines are adjacent, or be blank meaning there are no adjacent mines.
+
+This project was developed on the GitHub Enterprise repository located at this URL: <https://github.coecis.cornell.edu/ire2/CANIT> <br>
+This repository was created to organize and clean up parts of the original project for showcase purposes. To see full commit history, please refer to the original repository linked above.
 
 ## Authors
 
@@ -7,36 +17,19 @@
 - Ignacio Estrada Cavero (ire2)
 - Teg Singh (ts647)
 
-## Prerequisites
+
+## Installation instructions
 
 Ensure you have the following installed:
 
 - **OCaml**: for compiling the code.
 - **Dune**: OCaml’s build system.
-- **Js_of_ocaml**: for compiling OCaml to JavaScript.
-- **Python** (optional): to run a local server for viewing the game in a browser.
+- **Js_of_ocaml Packages**: for compiling OCaml to JavaScript.
+```bash
+opam install js_of_ocaml js_of_ocaml-ppx js_of_ocaml-lwt
+``` 
+- **Python**: to run a local server for viewing the game in a browser.
 
-## Project Structure
-
-```
-project-root/
-│
-├── lib/
-|   ├── dune
-│   ├── board.ml        # Board logic
-│   ├── load.ml         # Rendering and drawing
-|
-|── test/
-|   |── dune
-|   |── test_canit.ml   # Test suite file
-│
-├── main.ml             # Main game logic
-│
-├── index.html          # HTML for displaying the game
-│
-├── dune                # Dune build configuration
-├── dune-project        # Dune project descriptor
-```
 
 ## How to Build & Run the Game
 
@@ -67,37 +60,6 @@ python3 -m http.server
   ```
   http://localhost:8000
   ```
-- Locate `index.html` in the browser to load the game.
-
-### 4. **How to Play**
-
-- Once the game loads, you will see a 10x10 grid of cells.
-- **Revealing Cells**: 
-  - Click on any cell to reveal it.
-  - If the cell contains a mine, you lose, and the game ends.
-  - If the cell is empty or displays a number, the game continues.
-
-### Key Code Lines
-
-- **Initialize the Game**:
-  - In `main.ml`, look for:
-    ```ocaml
-    let initial_state = Board.initialize_game ()
-    ```
-  - This line sets up the board and places the mines.
-
-- **Render Board**:
-  - The `Load.render_board` function handles drawing the cells on the canvas.
-  - Located in `load.ml`, it updates the visual state of the board based on the current game state.
-
-- **Handle Clicks**:
-  - In `main.ml`, the `handle_click` function processes clicks on the grid, updates the game state, and triggers re-rendering.
-
-### Known Limitations
-
-- Mines are not yet flagged.
-- Winning detection is not implemented.
-- Refresh the page to reset the game.
 
 ## Troubleshooting
 
@@ -106,11 +68,49 @@ python3 -m http.server
   - Check the browser’s console for any JavaScript errors.
   - Verify that `main.js` is correctly linked in `index.html`.
 
-## Next Steps
+### 4. **How to Play**
 
-- Implement mine flagging.
-- Add winning detection.
-- Add a game restart button and an in-game timer.
-- Add different board sizes
-- Implement in a way so that more than one box appears at once (like it does on Google's minesweeper)
-- Make it so that you can't click on a bomb with the first click
+- Once the game loads, you will enter a username to begin playing. Then you must select a difficulty, corresponding to board size. Hit the "play" button to officially start the game.
+- **Revealing Cells**: 
+  - Click on any cell to reveal it.
+  - If the cell contains a mine, you lose, and the game ends.
+  - If the cell is empty or displays a number, the game continues.
+
+
+## Project Structure
+
+```
+project-root/
+│
+├── lib/
+|   ├── dune
+│   ├── board.mli           # Board logic
+│   ├── board.ml       
+│   ├── load.mli            # Rendering and drawing
+│   ├── load.ml
+│   ├── canvas_utils_js.mli # JS OCaml functions and type aliases for better readability
+│   ├── canvas_utils_js.ml
+│   ├── canvas_utils.mli    # Other functions and type aliases
+│   ├── canvas_utils.ml
+│   ├── csv_manager.ml      # Managing of CSV files that keep track of player scores
+│   ├── timer.mli           # Countint seconds in gameplay
+│   ├── timer.ml
+|
+|── test/
+|   |── dune
+|   |── test_canit.ml       # Main test suite file
+│   ├── test_csv_manager.ml # CSV manager test suite
+│   ├── test_timer.ml       # Timer test suite
+│
+|── images/
+│   ├── timer.svg           # Stopwatch icon for game timer
+|
+├── main.ml                 # Main game logic
+│
+├── index.html              # HTML for displaying the game
+|
+├── AUTHORS.md              # Acknowledgements and citations
+│
+├── dune                    # Dune build configuration
+├── dune-project            # Dune project descriptor
+```
