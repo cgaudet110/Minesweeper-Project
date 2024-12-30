@@ -7,6 +7,8 @@ Click on cells in the grid to reveal if there is a hidden mine.
 Cells clicked on will either end the game if there is a mine, 
 say how many mines are adjacent, or be blank meaning there are no adjacent mines.
 
+View a demo video of our project here: <https://youtu.be/Z_XLjqyArg0>
+
 This project was developed on the GitHub Enterprise repository located at this URL: <https://github.coecis.cornell.edu/ire2/CANIT> <br>
 This repository was created to organize and clean up parts of the original project for showcase purposes. To see full commit history, please refer to the original repository linked above.
 
