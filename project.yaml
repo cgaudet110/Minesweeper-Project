@@ -1,0 +1,32 @@
+---
+# Group members
+group:
+  - name: Caroline Gaudet
+    netid: cmg283
+  - name: AjayPaul Nagyal
+    netid: asn68
+  - name: Teg Singh
+    netid: ts647
+  - name: Ignacio Estrado Cavero
+    netid: ire2
+# Our PM
+pm:
+  name: Brendan Royals
+  netid: bhr53
+
+publish: true
+# Pithy title
+title: "Minesweeper by CANIT"
+# Link to GitHub repo
+git-repo: "https://github.coecis.cornell.edu/ire2/CANIT"
+
+demo-video-url: "https://youtu.be/Z_XLjqyArg0"
+
+desc: >
+  Our project is a minesweeper game similar to Google's "Minesweeper".
+  The object of the game is to uncover all non-mine cells in the grid without
+  setting off any hidden mines.
+  
+  Click on cells in the grid to reveal if there is a hidden mine.
+  Cells clicked on will either end the game if there is a mine, 
+  say how many mines are adjacent, or be blank meaning there are no adjacent mines.
