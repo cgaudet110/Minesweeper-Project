@@ -191,7 +191,7 @@ let win state =
   Timer.stop_timer !timer;
   let time = Timer.get_time !timer in
   show_alert
-    (Printf.sprintf "You win! All cells revealed!Time: %i seconds" time)
+    (Printf.sprintf "You win! All cells revealed! \nTime: %i seconds" time)
 
 let lose state =
   state.game_over <- true;
@@ -228,16 +228,17 @@ let handle_click (ev : mouse_event) =
 
       let cell = state.board.(x).(y) in
       if (not cell.is_revealed) && not cell.is_flagged then (
+        let num_revealed = reveal_cells x y 0 in
+        unrevealed_cells := !unrevealed_cells - num_revealed;
         if cell.is_mine then lose state
-        else if !unrevealed_cells > 1 then (
-          log_error "unrevealed cells is greater than mines";
-          log_error ("nmines: " ^ string_of_int !nmines);
-          log_error ("unrevealed cells: " ^ string_of_int !unrevealed_cells);
-          let num_revealed = reveal_cells x y 0 in
-          unrevealed_cells := !unrevealed_cells - num_revealed)
+        else if !unrevealed_cells > !remaining_flags then (
+          log_error "unrevealed cells is greater than remaining flags";
+          log_error ("remaining flags: " ^ string_of_int !remaining_flags);
+          log_error ("unrevealed cells: " ^ string_of_int !unrevealed_cells)
+          )
         else (
-          log_error "unrevealed cells are less than mines";
-          log_error ("nmines: " ^ string_of_int !nmines);
+          log_error "unrevealed cells are less than remaining flags";
+          log_error ("remaining flags: " ^ string_of_int !remaining_flags);
           log_error ("unrevealed cells: " ^ string_of_int !unrevealed_cells);
           win state);
 
@@ -461,7 +462,7 @@ let display_info_box () =
   | None -> log_error "Info element not found"
 
 (* Enable the game controls *)
-let enable_game () =
+(* let enable_game () =
   match get_element_by_id start_id with
   | Some btn -> (
       match get_element_by_id play_id with
@@ -481,8 +482,25 @@ let enable_game () =
           log_error ("No icon found\n" ^ "Please Check the imeages repo")
           (* Properly closed the inner match *))
   | None ->
-      log_error ("No start button was found \n" ^ "Please Check the Index.html")
+      log_error ("No start button was found \n" ^ "Please Check the Index.html") *)
 (* Properly closed the outer match *)
+let enable_game () = 
+match get_element_by_id play_id with
+  | Some icon -> 
+      icon##.onclick :=
+        Dom_html.handler (fun _ ->
+            icon##.className := Js.string "ri-restart-line";
+            display_info_box ();
+            start_game ();
+            update_timer ();
+            if get_selected_difficulty () <> Board.None then (
+              log_error "it is not equal";
+              Js._true)
+            else Js._true)
+      (* Properly closed the handler block *)
+  | None ->
+      log_error ("No icon found\n" ^ "Please Check the imeages repo")
+      (* Properly closed the inner match *)
 
 let display_top_console () =
   let table = read_table "scores.csv" in
@@ -556,15 +574,17 @@ let () =
                       enable_game ();
 
                       show_alert
-                        ("Welcome to minesweeper, " ^ username ^ "!\n" ^ "\n"
-                       ^ "\nClick on cells to reveal them.\n"
-                       ^ "They are labelled with the number of adjacent mines \
-                          that cell has.\n"
-                       ^ " If you think a cell has a mine, hover your mouse \
+                        ("Welcome to minesweeper, " ^ username ^ "!\n"
+                       ^ "\n- Click on cells to reveal them.\n"
+                       ^ "- Cells are labelled with the number of adjacent mines \
+                          it has.\n"
+                       ^ "- If you think a cell has a mine, hover your mouse \
                           over it and click \"F\" on the keyboard to flag a \
-                          cell.\n"
-                       ^ "You can unflag that cell by clicking \"F\" again. If \
-                          you click a bomb, you lose!\n");
+                          cell. If you change your mind, you can unflag that cell \
+                          by clicking \"F\" again.\n"
+                       ^ "- If you don't think a cell has a mine, click on it to reveal it. \
+                          If you successfully reveal all safe cells, you win. If \
+                          you click a mine, you lose!\n");
 
                       initialize_dropdown_listener ();
 
